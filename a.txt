@@ -1,0 +1,9 @@
+a=3
+b=8
+c=10
+a=(2*3.141692*3)
+print("El Resultado Radio 3 es: ",a)
+b=(2*3.141692*8)
+print("El Resultado radio 8 es: ",b)
+c=(2*3.141692*10)
+print("El Resultado de la circunferencia radio 10 es:",c)
