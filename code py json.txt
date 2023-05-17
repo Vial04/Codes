@@ -1,0 +1,43 @@
+import requests
+import json
+
+def obtener_distancia_y_direcciones(origen, destino, api_key):
+    url = f"https://www.mapquestapi.com/directions/v2/route?key={api_key}&from={origen}&to={destino}&unit=k"
+    response = requests.get(url)
+    data = json.loads(response.text)
+    if data["info"]["statuscode"] == 0:
+        return data["route"]["distance"], data["route"]["legs"][0]["maneuvers"]
+    else:
+        return None, None
+
+def calcular_tiempo(distancia):
+    velocidad_promedio = 60 # km/h
+    tiempo = distancia / velocidad_promedio
+    horas = int(tiempo)
+    minutos = int((tiempo - horas) * 60)
+    segundos = int(((tiempo - horas) * 60 - minutos) * 60)
+    return f"{horas} horas, {minutos} minutos y {segundos} segundos"
+
+def mostrar_resultado(origen, destino, duracion, direcciones):
+    print(f"Viaje desde {origen} hasta {destino}:")
+    print(f"Duración del viaje: {duracion}.")
+    print("Direcciones:")
+    for i, direccion in enumerate(direcciones, start=1):
+        print(f"{i}. {direccion['narrative']}")
+
+api_key = "CmxboXkN6VvAdCExJSrIiETqYsWCZzFu"
+while True:
+    origen = input("Ingrese la ciudad de origen (Chile): ")
+    if origen.lower() == "salir":
+        break
+    destino = input("Ingrese la ciudad de destino (Latinoamérica): ")
+    if destino.lower() == "salir":
+        break
+    distancia, direcciones = obtener_distancia_y_direcciones(origen, destino, api_key)
+    if distancia is not None and direcciones is not None:
+        duracion = calcular_tiempo(distancia)
+        mostrar_resultado(origen, destino, duracion, direcciones)
+    else:
+        print("ERROR Intente nuevamente")
+
+print("Nos vemos")
